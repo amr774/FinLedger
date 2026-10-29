@@ -1,0 +1,40 @@
+groups:
+  - name: finledger
+    rules:
+      - alert: FinLedgerScrapeUnavailable
+        expr: up{job=~"finledger-.*"} == 0
+        for: 2m
+        labels: { severity: critical }
+        annotations:
+          {
+            summary: 'FinLedger metrics unavailable; check process and database readiness',
+          }
+      - alert: FinLedgerOutboxStalled
+        expr: finledger_outbox_oldest_age_seconds > 120
+        for: 2m
+        labels: { severity: warning }
+        annotations: { summary: 'Committed events are waiting for delivery' }
+      - alert: FinLedgerDeadEvents
+        expr: finledger_outbox_dead > 0
+        for: 1m
+        labels: { severity: warning }
+        annotations: { summary: 'Events require reviewed operational replay' }
+      - alert: FinLedgerServerErrors
+        expr: increase(finledger_http_server_errors_total[5m]) > 5
+        labels: { severity: critical }
+        annotations: { summary: 'API server errors increased' }
+      - alert: FinLedgerMoneyFailures
+        expr: increase(finledger_money_request_failures_total[5m]) > 20
+        labels: { severity: warning }
+        annotations:
+          {
+            summary: 'Money request failures increased; includes legitimate business rejections',
+          }
+      - alert: FinLedgerPublishFailures
+        expr: increase(finledger_outbox_publish_failures_total[5m]) > 0
+        labels: { severity: warning }
+        annotations: { summary: 'Broker publications are failing' }
+      - alert: FinLedgerRedisFallback
+        expr: increase(finledger_redis_fallbacks_total[5m]) > 0
+        labels: { severity: warning }
+        annotations: { summary: 'Rate limiter is using per-process fallback' }

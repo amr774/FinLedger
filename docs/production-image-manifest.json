@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-10-29T11:48:17.545Z",
+  "images": [
+    {
+      "name": "finledger-production-api",
+      "localImageId": "sha256:3a5fce3a3993e9b2377401787399106d6db0c25a2dbfad5a9b4149f45bb224ee",
+      "registryDigests": [],
+      "user": "node"
+    },
+    {
+      "name": "finledger-production-worker",
+      "localImageId": "sha256:c3a4d44faeb89d61156ad7fcc08b89a6abeee27692ac7900e15490748b6aacb0",
+      "registryDigests": [],
+      "user": "node"
+    },
+    {
+      "name": "finledger-production-migrate",
+      "localImageId": "sha256:06f3921425157828d1fe2c4bc58084e090aa1303d09895274c69d28def45c8ec",
+      "registryDigests": [],
+      "user": "node"
+    },
+    {
+      "name": "finledger-production-web",
+      "localImageId": "sha256:160aec49e5238766a8297bb28f538dbf38e7d24f23b7bc006f55ab8925084107",
+      "registryDigests": [],
+      "user": "101"
+    },
+    {
+      "name": "caddy:2-alpine",
+      "localImageId": "sha256:3067cc4e02c091399edbd5d65f85a3ff4d511574aecadb47f280c3761e68852e",
+      "registryDigests": [
+        "caddy@sha256:eb4d35b7452d1ab6171fbdbe8d9275b2301dad6dad92115d91e19fb9b24d510f"
+      ],
+      "user": ""
+    },
+    {
+      "name": "prom/prometheus:v3.13.5",
+      "localImageId": "sha256:1ba6092485e679637f4d2fb8f2e0d83706bec6b139908a1f9910d9b424e80941",
+      "registryDigests": [
+        "prom/prometheus@sha256:aafa9d694e6a883c02db516d9f6e5b84e14195f49a2a6456a4cca815edda72b9"
+      ],
+      "user": "nobody"
+    }
+  ],
+  "note": "Local application image IDs are not registry manifest digests; application images were not pushed."
+}

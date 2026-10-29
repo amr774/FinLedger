@@ -1,0 +1,31 @@
+{
+	email {$ACME_EMAIL}
+	acme_ca {$ACME_CA:https://acme-v02.api.letsencrypt.org/directory}
+	admin off
+}
+{$PUBLIC_DOMAIN} {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		Content-Security-Policy "default-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+		-Server
+	}
+	request_body {
+		max_size 64KB
+	}
+	@private path /api/v1/monitoring/* /api/docs /api/docs/* /api/docs-json
+	handle @private {
+		respond 404
+	}
+	handle /api/* {
+		reverse_proxy api:3000 {
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto https
+		}
+	}
+	handle {
+		reverse_proxy web:8080
+	}
+}

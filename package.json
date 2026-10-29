@@ -1,0 +1,49 @@
+{
+  "name": "finledger",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24.11 <25"
+  },
+  "scripts": {
+    "build": "npm run build -w @finledger/shared && npm run build -w @finledger/api && npm run build -w @finledger/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint apps packages scripts tests playwright.config.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run test -w @finledger/api",
+    "test:integration": "npm run test:integration -w @finledger/api",
+    "test:e2e": "playwright test",
+    "db:generate": "prisma generate --config apps/api/prisma.config.ts",
+    "db:migrate": "prisma migrate deploy --config apps/api/prisma.config.ts",
+    "db:seed": "tsx apps/api/prisma/seed.ts",
+    "dev:api": "npm run dev -w @finledger/api",
+    "dev:web": "npm run dev -w @finledger/web",
+    "db:test": "node scripts/test-db.mjs",
+    "test:hardening": "node scripts/hardening-check.mjs",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run test:integration && npm run build && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@nestjs/platform-express": "^11.2.8",
+    "@nestjs/swagger": "^11.4.7",
+    "@playwright/test": "^1.56.1",
+    "dotenv": "^17.2.3",
+    "eslint": "^10.13.0",
+    "prettier": "^3.6.2",
+    "prisma": "7.10.1",
+    "tsx": "^4.20.6",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0"
+  },
+  "overrides": {
+    "multer": "^2.5.0",
+    "@nestjs/swagger": {
+      "js-yaml": "^5.5.0"
+    }
+  }
+}

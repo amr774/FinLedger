@@ -1,0 +1,53 @@
+name: Verify FinLedger
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level=moderate
+      - run: node scripts/setup-env.mjs
+      - run: node scripts/check-secrets.mjs
+      - run: docker compose --profile test up -d --wait postgres postgres-test redis rabbitmq
+      - run: npm run db:generate && npm run db:migrate && npm run db:test
+      - run: npm run build -w @finledger/shared
+      - run: npm run format:check && npm run lint && npm run typecheck
+      - run: npm test && npm run test:integration
+      - run: npm run build
+      - run: npm run test:hardening
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - run: docker compose build
+      - run: docker compose --env-file .env.production.example -f compose.production.yml -f compose.staging.yml config --quiet
+      - run: docker compose --env-file .env.production.example -f compose.production.yml --profile operations build
+      - run: node scripts/tls-check.mjs && node scripts/database-tls-check.mjs
+      - run: docker compose up -d --wait api web worker
+      - run: node scripts/load.mjs
+      - run: node scripts/check-integrity.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification-evidence
+          path: |
+            test-results/
+            docs/screenshots/
+            docs/load-results.json
+            docs/hardening-results.json
+            docs/tls-results.json
+            docs/database-tls-results.json
+      - if: always()
+        run: docker compose --profile test down -v

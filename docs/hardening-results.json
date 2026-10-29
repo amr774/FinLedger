@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-10-29T11:46:49.600Z",
+  "status": "VERIFIED",
+  "sourceDatabase": "finledger_hardening_7c469f91fea7_test",
+  "restoredDatabase": "finledger_restore_505f8e55bb13430c91f61e188835cb7c_test",
+  "checks": [
+    {
+      "name": "production backup and restore reject plaintext URLs before filesystem or database access",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime is non-owner and non-superuser; migrator owns schema tables",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies schema DDL",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies trigger disabling",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies ledger deletion",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies ledger truncation",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies table dropping",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies role creation",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies migration metadata",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies migration impersonation",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies role updates",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime denies event payload mutation",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "registration, wallet creation and funding work with restricted credentials",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "runtime cannot provision an administrator",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "20 concurrent identical requests have one effect under restricted role",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "50 concurrent transfers cannot overdraw under restricted role",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "direct balance corruption rolls back under restricted role",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "protected metrics reject missing/wrong tokens and expose no account data",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "restricted worker becomes ready, publishes events and delivers notifications",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "backup role can read but cannot change financial data",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "backup ciphertext does not contain fixture emails",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "tampered backup fails authentication before restore",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "encrypted backup restores all application rows into a new isolated database",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "restored ledger constraints reject direct balance corruption",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "restored ledger reconciles and conserves total money",
+      "status": "VERIFIED"
+    }
+  ],
+  "note": "Existing databases retained; generated test databases/roles remain for inspection. Key/archive are in ignored .hardening-test."
+}

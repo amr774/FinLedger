@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum WalletStatus {
+  ACTIVE
+  FROZEN
+}
+
+enum TransferKind {
+  TRANSFER
+  DEMO_FUNDING
+}
+
+enum Side {
+  DEBIT
+  CREDIT
+}
+
+model User {
+  id            String              @id @default(uuid()) @db.Uuid
+  email         String              @unique
+  name          String
+  passwordHash  String
+  role          Role                @default(USER)
+  createdAt     DateTime            @default(now())
+  wallet        Wallet?
+  sessions      Session[]
+  idempotency   IdempotencyRecord[]
+  notifications Notification[]
+  audits        AuditLog[]
+}
+
+model Session {
+  id        String         @id @default(uuid()) @db.Uuid
+  userId    String         @db.Uuid
+  user      User           @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime       @default(now())
+  tokens    RefreshToken[]
+
+  @@index([userId])
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  hash      String    @unique
+  sessionId String    @db.Uuid
+  session   Session   @relation(fields: [sessionId], references: [id])
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([sessionId])
+}
+
+model Wallet {
+  id        String          @id @default(uuid()) @db.Uuid
+  userId    String?         @unique @db.Uuid
+  user      User?           @relation(fields: [userId], references: [id])
+  systemKey String?         @unique
+  currency  String          @default("EGP")
+  status    WalletStatus    @default(ACTIVE)
+  balance   BigInt          @default(0)
+  createdAt DateTime        @default(now())
+  outgoing  Transfer[]      @relation("source")
+  incoming  Transfer[]      @relation("destination")
+  postings  LedgerPosting[]
+}
+
+model Transfer {
+  id            String         @id @default(uuid()) @db.Uuid
+  sourceId      String         @db.Uuid
+  destinationId String         @db.Uuid
+  source        Wallet         @relation("source", fields: [sourceId], references: [id])
+  destination   Wallet         @relation("destination", fields: [destinationId], references: [id])
+  amount        BigInt
+  currency      String         @default("EGP")
+  kind          TransferKind
+  createdAt     DateTime       @default(now())
+  journal       LedgerJournal?
+
+  @@index([sourceId, createdAt])
+  @@index([destinationId, createdAt])
+}
+
+model LedgerJournal {
+  id         String          @id @default(uuid()) @db.Uuid
+  transferId String          @unique @db.Uuid
+  transfer   Transfer        @relation(fields: [transferId], references: [id])
+  createdAt  DateTime        @default(now())
+  postings   LedgerPosting[]
+}
+
+model LedgerPosting {
+  id        String        @id @default(uuid()) @db.Uuid
+  journalId String        @db.Uuid
+  journal   LedgerJournal @relation(fields: [journalId], references: [id])
+  walletId  String        @db.Uuid
+  wallet    Wallet        @relation(fields: [walletId], references: [id])
+  side      Side
+  amount    BigInt
+  createdAt DateTime      @default(now())
+
+  @@unique([journalId, side])
+  @@index([walletId, createdAt])
+}
+
+model IdempotencyRecord {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  user        User     @relation(fields: [userId], references: [id])
+  key         String
+  fingerprint String
+  response    Json
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, key])
+}
+
+model OutboxEvent {
+  id            String    @id @default(uuid()) @db.Uuid
+  type          String
+  payload       Json
+  createdAt     DateTime  @default(now())
+  publishedAt   DateTime?
+  attempts      Int       @default(0)
+  nextAttemptAt DateTime  @default(now())
+  lastError     String?
+  deadAt        DateTime?
+
+  @@index([publishedAt, deadAt, nextAttemptAt])
+}
+
+model Notification {
+  id        String   @id @default(uuid()) @db.Uuid
+  eventId   String   @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+  @@index([userId, createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String?  @db.Uuid
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String
+  resourceId String
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+}

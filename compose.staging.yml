@@ -1,0 +1,8 @@
+# Combine with compose.production.yml. Same runtime security, separate project/data.
+name: finledger-staging
+services:
+  edge:
+    environment:
+      ACME_CA: https://acme-staging-v02.api.letsencrypt.org/directory
+# ACME staging certificates are intentionally NOT browser-trusted.
+# Use a separate host and separate database/broker/Redis instances from production.

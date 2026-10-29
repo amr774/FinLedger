@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-29T11:51:44.484Z",
+  "status": "VERIFIED",
+  "checks": [
+    "Untrusted certificate rejected",
+    "Explicit CA validates HTTPS",
+    "Spoofed forwarding headers overwritten",
+    "HSTS and CSP present",
+    "Public metrics and Swagger blocked",
+    "Frontend route forwarded",
+    "HTTP redirects to HTTPS under read-only capability-restricted edge configuration"
+  ],
+  "limitation": "Local Caddy internal CA and diagnostic upstream; public ACME/DNS and provider TLS connectivity are not verified."
+}

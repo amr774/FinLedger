@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-29T12:19:12.155Z",
+  "status": "VERIFIED",
+  "seededUsers": 3,
+  "balancePerUserMinor": "100000",
+  "fundingTransfersAfterTwoSeeds": 3,
+  "swaggerPaths": 18,
+  "readinessHttp": 200,
+  "spaRegisterHttp": 200,
+  "integrity": {
+    "totalMinor": "0",
+    "negativeUserWallets": 0,
+    "unbalancedJournals": 0,
+    "inconsistentWalletCaches": 0
+  },
+  "scope": "Fresh isolated local Compose project; original project preserved"
+}

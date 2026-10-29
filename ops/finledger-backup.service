@@ -1,0 +1,21 @@
+[Unit]
+Description=Encrypted FinLedger PostgreSQL backup
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=finledger-backup
+Group=finledger-backup
+WorkingDirectory=/opt/finledger
+EnvironmentFile=/etc/finledger/backup.env
+ExecStart=/usr/bin/node /opt/finledger/scripts/backup.mjs create
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/finledger/backups
+TimeoutStartSec=30min
+
+# Configure OnFailure or a monitoring integration before relying on this schedule.

@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-10-28T15:28:27.183Z",
+  "conditions": {
+    "base": "http://127.0.0.1:3101/api/v1",
+    "requests": 50,
+    "concurrency": 50,
+    "startingMinor": "1000",
+    "transferMinor": "100",
+    "runtime": "v24.14.0",
+    "platform": "win32"
+  },
+  "elapsedMs": 812.1496,
+  "requestsPerSecond": 61.56501216032121,
+  "latencyMs": {
+    "p50": 633.1559,
+    "p95": 787.9141000000001,
+    "max": 800.3714000000001
+  },
+  "statuses": {
+    "201": 10,
+    "409": 40
+  },
+  "unexpectedErrorRate": 0
+}

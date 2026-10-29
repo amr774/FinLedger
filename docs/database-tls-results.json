@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-10-29T11:46:35.732Z",
+  "status": "VERIFIED",
+  "checks": [
+    "PostgreSQL TLS connection using configured CA",
+    "Server rejects unencrypted connections",
+    "Client rejects untrusted CA",
+    "Client rejects incorrect hostname",
+    "Production runtime rejects superuser credentials",
+    "Production runtime accepts a restricted role over verified TLS"
+  ],
+  "limitation": "Isolated temporary PostgreSQL 17 container; hosted database firewall and CA provisioning still require staging verification."
+}
